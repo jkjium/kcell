@@ -18,7 +18,8 @@ def register(arglist):
 	print 'register current stage ok.'
 
 def stagelist(arglist):
-	if len(arglist) < 3:
+	args = ['','','.','name=stage']
+	if len(args) < 3:
 		print 'show entry info'
 		print 'Usage: python cell.py info rank "query string" ...'
 		print 'example:\npython cell.py info .'
@@ -30,7 +31,10 @@ def stagelist(arglist):
 		return
 
 	em = entmgr(cm.cellroot)
-	sortlist = em.info(arglist)
+	sortlist = em.info(args)
 	cm.fmtout(sortlist)
 
-	print 'list %d records.' % len(sortlist)	
+	print 'list %d records.' % len(sortlist)
+
+def stagerm(arglist):
+	pass

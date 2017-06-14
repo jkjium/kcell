@@ -54,7 +54,8 @@ def main():
 		'ac'   : proc_entry.altercontent,
 		'dump' : proc_entry.dump,
 		#'test': tt.test,
-		'register': proc_root.register,
+		'register':    proc_root.register,
+		'stagelist':   proc_root.stagelist,
 		#'clean': tt.clean
 
 		#'memo': proc_memo

@@ -75,6 +75,114 @@ class entmgr(object):
 
 		return sorted(retlist, key=lambda e: float(e.rank))
 
+	def rm(self, arglist):
+		'''
+		remove any entry that matches the conditions
+
+		'''
+		q = Query()
+		elist = cm.parserank(self.db, arglist[2])
+		retlist = elist
+		if len(arglist)> 3:
+			retlist = cm.filtercondition(elist, arglist[3:])	
+
+		if len(retlist) >= len(self.db.all()):
+			print 'Warning! All records will be purged. Use cell clean instead.'
+			return
+
+		cm.fmtout(retlist)
+		for e in retlist:
+			self.db.remove(q.rank == e.rank)
+		print '%d record removed.' % len(retlist)		
+
+	def altercontent(self, arglist):
+		entdb = self.db
+		if arglist[2] == '-':
+			e = cm.lastentry(entdb)
+		else:
+			rank = float(arglist[2])
+			e = cm.loadent(entdb.search(Query().rank == rank)[0])
+		print '--- original record ---'
+		print '\n%s' % str(e)
+
+		clist = e.content.split('\n')
+		cond = arglist[3]
+		i = [c.isdigit() for c in cond].index(False) # find the first occurance of non digit character
+		if i == 0:
+			textid = len(clist)	- 1
+		else:
+			textid = int(cond[:i])
+
+		update = cond[i:]
+		if textid > (len(clist)-1):
+			print 'error::invalid text id %d' % textid
+			return
+		op = update[0]
+		if op == '+':
+			v = update[1:]
+			clist[textid] = '%s\n%s' % (clist[textid], v)
+		elif op == '=':
+			v = update[1:]
+			clist[textid] = v
+		elif op == '-':
+			del clist[textid]
+		else:
+			print 'error::invalid operation %s' % op
+			return
+
+		e.content = '\n'.join(clist)
+		print '--- updated record ---'
+		print '\n%s\n' % str(e)
+		cm.saveent(entdb, e)		
+
+
+	def alterrank(self, arglist):
+
+		entdb = self.db
+		update = float(arglist[3])
+		elist = [cm.loadent(re) for re in entdb.all()]
+		ranklist = [e.rank for e in elist]
+		if update in ranklist:
+			print 'error::new rank exist!'
+			return
+		if arglist[2] == '-':
+			target = max(ranklist)
+		else:
+			target = float(arglist[2])
+			if target not in ranklist:
+				print 'error::old rank not exist!'
+				return
+
+		entdb.remove(Query().rank == target)
+		for e in elist:
+			if e.rank == target:
+				print '--- original record ---'
+				print '\n%s' % str(e)				
+				e.rank = update
+				print '\n%s\n' % str(e)
+				cm.saveent(entdb, e)
+				return
+
+
+	def alter(self, arglist):
+		entdb = self.db
+		elist = cm.parserank(entdb, arglist[2])
+		retlist = elist
+		argcond, argupdate = cm.filterarg(arglist[3:])
+		#print 'argcond: %s' % repr(argcond)
+		#print 'argupdate: %s' % repr(argupdate)
+
+		retlist = cm.filtercondition(elist, argcond)
+		print '--- original records ---'
+		cm.fmtout(retlist)
+
+		ret = cm.entryupdate(retlist, argupdate)
+		print '--- updated records ---'
+		cm.fmtout(retlist)
+
+		for e in retlist:
+			cm.saveent(entdb, e)
+		print 'update %d records.' % len(retlist)
 
 
 	def dump(self):
