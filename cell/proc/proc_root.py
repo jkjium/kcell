@@ -19,16 +19,6 @@ def register(arglist):
 
 def stagelist(arglist):
 	args = ['','','.','name=stage']
-	if len(args) < 3:
-		print 'show entry info'
-		print 'Usage: python cell.py info rank "query string" ...'
-		print 'example:\npython cell.py info .'
-		print 'python cell.py info . stage=dvlp'
-		print 'python cell.py info 5:'
-		print 'python cell.py info :5 tag=test,debug stage=dvlp'
-		print 'python cell.py info 2:5 tag=debug stage=test'
-		print 'python cell.py info -'
-		return
 
 	em = entmgr(cm.cellroot)
 	sortlist = em.info(args)
@@ -36,5 +26,18 @@ def stagelist(arglist):
 
 	print 'list %d records.' % len(sortlist)
 
-def stagerm(arglist):
-	pass
+def metarm(arglist):
+	if len(arglist) < 3:
+		print 'rm entry(ies)'
+		print 'Usage: python cell.py rm rank "query string" ...'
+		print 'example: rc rm . tag=alter # remove all the entries tag contains alter'
+		return
+	entmgr(cm.cellroot).rm(arglist)
+
+def metaalter(arglist):
+	if len(arglist) < 3:
+		print 'rm entry(ies)'
+		print 'Usage: python cell.py rm rank "query string" ...'
+		print 'example: rc rm . tag=alter # remove all the entries tag contains alter'
+		return
+	entmgr(cm.cellroot).rm(arglist)	

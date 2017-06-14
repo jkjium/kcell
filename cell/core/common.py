@@ -144,7 +144,7 @@ def parsecond(cond, plist):
 	"""
 	ret = ('', '', '')
 	oplist = [(c, cond.index(c)) for c in plist if c in cond]
-	print repr(oplist)
+	#print repr(oplist)
 	if len(oplist)==1:
 		op =oplist[0][0] 
 		d = oplist[0][1]
