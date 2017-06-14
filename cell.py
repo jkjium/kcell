@@ -26,10 +26,12 @@ def init(arglist):
 		print 'cannot create cell meta : File exists'
 		#cellinfo()
 
-
-
 def rollback():
 	copyfile(cm.entrydb+'.shadow', cm.entrydb)
+
+def rollbackroot():
+	copyfile(cm.cellroot+'.shadow', cm.cellroot)
+
 
 def help(d):
 	print '--------------------'
@@ -37,11 +39,6 @@ def help(d):
 		d[name]([])
 		print ''
 	print '--------------------'
-
-def _globalseq():
-	cm.globalseq = cm.getmaxseq(TinyDB(cm.entrydb))
-	#print 'global seq: %d' % cm.globalseq
-
 
 # main entrance
 def main():
@@ -66,14 +63,16 @@ def main():
 	if sys.argv[1] == 'init':
 		init(sys.argv)
 	elif sys.argv[1] == 'rollback':
-		print 'restore db from last backup.'
+		print 'restore rc db from last backup.'
 		rollback()
+	elif sys.argv[1] == 'rollbackroot':
+		print 'restore cellroot db from last backup.'
+		rollbackroot()
 	elif len(sys.argv)<2 or (sys.argv[1] not in dispatch):
 		help(dispatch)
 		print 'error::Invalid cmd string\n'
 		exit(1)
 	else:
-		_globalseq()
 		dispatch[sys.argv[1]](sys.argv)
 
 if __name__ == '__main__':

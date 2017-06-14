@@ -21,8 +21,8 @@ ext = '+'
 ops = ['=','%'] # substring and regex
 aps = [assign, ext] # assign and extend (for tag, content)
 
-def backup():
-        copyfile(entrydb, entrydb+'.shadow')
+def backup(dbpathfile):
+	copyfile(dbpathfile, dbpathfile+'.shadow')
 
 def lastentry(entdb):
 	return sorted([loadent(re) for re in entdb.all()], key=lambda e: float(e.rank))[-1]
@@ -209,7 +209,7 @@ def parserank(entdb, rankstr):
 		if ':' == rankstr[0]:
 			relist = entdb.search( (q.rank >=0) & (q.rank <= float(rankstr[1:])) )
 		elif ':' == rankstr[-1]: #[2:]
-			relist = entdb.search((q.rank >= float(rankstr[:-1])) & (q.rank <= globalseq))
+			relist = entdb.search((q.rank >= float(rankstr[:-1])) & (q.rank <= getmaxseq(entdb)))
 		else: #[2:5]
 			rankr = [float(r) for r in rankstr.split(':')]
 			relist = entdb.search( (q.rank>= rankr[0]) & (q.rank<=rankr[1]) )
@@ -219,7 +219,6 @@ def parserank(entdb, rankstr):
 
 	#print repr(relist)	
 	return [loadent(re) for re in relist]
-
 
 def loadent(dbent):
 	e = entry()
@@ -236,7 +235,7 @@ def loadent(dbent):
  			e.property[k] = dbent[k]
 	return e
 
-
+'''
 def saveent(entdb, e):
 	#backup()
 	tagstr = ','.join(set(e.tag))
@@ -245,6 +244,7 @@ def saveent(entdb, e):
 	objdict.update(keyword) # combine two dictionary
 	entdb.remove(Query().rank == e.rank) # make sure there is no duplication
 	entdb.insert(objdict)
+'''
 
 def getmaxseq(entdb):
 	ranklist = [loadent(re).rank for re in entdb.all()]

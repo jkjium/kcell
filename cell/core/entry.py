@@ -20,7 +20,7 @@ class entry(object):
 		desc = self.content.split('\n')
 		if 'ts' not in self.property:
 			self.property['ts'] = '1497470916' #'2017-06-14 15:10:23'
-		return '[%d] %s tag:[%s] {%s} %s\n>>\n%s' % (
+		return '[%d] (%s) tag:[%s] {%s} %s\n>>\n%s' % (
 				self.rank, 
 				self.name, 
 				','.join(set(self.tag)),
@@ -36,9 +36,19 @@ class entmgr(object):
 		if not os.path.exists(cm.cellhome):
 			print 'cell db not exist. run "rc init" first.'
 			exit(-1)
+		self.dbname = dbname
 		self.db = TinyDB(dbname) 
 		self.globalseq = cm.getmaxseq(self.db)
+		cm.globalseq = self.globalseq
 
+	def saveent(self, e):
+		cm.backup(self.dbname)
+		tagstr = ','.join(set(e.tag))
+		keyword = {'name':e.name, 'rank':e.rank, 'content':e.content, 'tag':tagstr}
+		objdict = e.property.copy()
+		objdict.update(keyword) # combine two dictionary
+		self.db.remove(Query().rank == e.rank) # make sure there is no duplication
+		self.db.insert(objdict)
 
 	def add(self, arglist):
 		e = entry()
@@ -66,7 +76,7 @@ class entmgr(object):
 				re = cm.loadent(r)
 				print str(re)
 		else:
-			cm.saveent(self.db, e)
+			self.saveent(e)
 			print '\n---\n%s\n---\n' % str(e)
 			print 'new entry added.'
 			print self.globalseq		
@@ -143,7 +153,7 @@ class entmgr(object):
 		e.content = '\n'.join(clist)
 		print '--- updated record ---'
 		print '\n%s\n' % str(e)
-		cm.saveent(entdb, e)		
+		self.saveent(e)		
 
 
 	def alterrank(self, arglist):
@@ -170,7 +180,7 @@ class entmgr(object):
 				print '\n%s' % str(e)				
 				e.rank = update
 				print '\n%s\n' % str(e)
-				cm.saveent(entdb, e)
+				self.saveent(e)
 				return
 
 
@@ -191,7 +201,7 @@ class entmgr(object):
 		cm.fmtout(retlist)
 
 		for e in retlist:
-			cm.saveent(entdb, e)
+			self.saveent(e)
 		print 'update %d records.' % len(retlist)
 
 
