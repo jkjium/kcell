@@ -20,6 +20,7 @@ def init(arglist):
 		os.makedirs(cm.cellhome)
 		db = TinyDB(cm.entrydb)
 		# create db
+		proc_root.register(arglist)
 		print 'cell init done.'
 	else:
 		print 'cannot create cell meta : File exists'
@@ -54,12 +55,13 @@ def main():
 		'ac'   : proc_entry.altercontent,
 		'dump' : proc_entry.dump,
 		#'test': tt.test,
-		'register':    proc_root.register,
-		'stagelist':   proc_root.stagelist,
+		'register'  : proc_root.register,
+		'stagelist' : proc_root.stagelist,
+		'metarm'   : proc_root.metarm,
+		'metaalter': proc_root.metaalter,
 		#'clean': tt.clean
-
-		#'memo': proc_memo
 	}
+
 	if sys.argv[1] == 'init':
 		init(sys.argv)
 	elif sys.argv[1] == 'rollback':
