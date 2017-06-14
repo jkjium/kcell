@@ -7,12 +7,12 @@ from cell.core.entry import entry, entmgr
 
 def register(arglist):
 	em = entmgr(cm.cellroot)
-	name = 'cell stage'
+	name = 'stage'
 	content = os.getcwd()
 	tag = 'tag=path'
 	desc = 'desc=cell stage'
 	if len(arglist) > 2:
-		desc = arglist[2]
+		desc = 'desc='+arglist[2]
 	addarg =['','',name,content,tag, desc] 
 	em.add(addarg)
 	print 'register current stage ok.'
