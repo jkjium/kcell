@@ -57,6 +57,7 @@ def main():
 		#'test': tt.test,
 		'register'  : proc_root.register,
 		'stagelist' : proc_root.stagelist,
+		'stagerm'   : proc_root.metarm,
 		'metarm'   : proc_root.metarm,
 		'metaalter': proc_root.metaalter,
 		#'clean': tt.clean

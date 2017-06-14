@@ -22,7 +22,7 @@ ops = ['=','%'] # substring and regex
 aps = [assign, ext] # assign and extend (for tag, content)
 
 def backup():
-	copyfile(entrydb, entrydb+'.shadow')
+        copyfile(entrydb, entrydb+'.shadow')
 
 def lastentry(entdb):
 	return sorted([loadent(re) for re in entdb.all()], key=lambda e: float(e.rank))[-1]
@@ -238,14 +238,13 @@ def loadent(dbent):
 
 
 def saveent(entdb, e):
-	backup()
+	#backup()
 	tagstr = ','.join(set(e.tag))
 	keyword = {'name':e.name, 'rank':e.rank, 'content':e.content, 'tag':tagstr}
 	objdict = e.property.copy()
 	objdict.update(keyword) # combine two dictionary
 	entdb.remove(Query().rank == e.rank) # make sure there is no duplication
 	entdb.insert(objdict)
-
 
 def getmaxseq(entdb):
 	ranklist = [loadent(re).rank for re in entdb.all()]

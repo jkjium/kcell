@@ -1,3 +1,6 @@
+import os
+import time
+from datetime import datetime
 import common as cm
 from tinydb import TinyDB, Query
 
@@ -11,15 +14,18 @@ class entry(object):
 		self.content = '' # main content
 		self.tag = ['_DEFAULT'] # tags for searching purpose
 		self.property= {} # for any extend properties
-		self.flag = -1# for routine purpose, work in memory, never store in db
+		self.flag = -1 # for routine purpose, work in memory, never store in db
 
 	def __str__(self):
 		desc = self.content.split('\n')
-		return '[%d] [%s] [%s] [%s]\n>>\n%s' % (
+		if 'ts' not in self.property:
+			self.property['ts'] = '1497470916' #'2017-06-14 15:10:23'
+		return '[%d] %s tag:[%s] {%s} %s\n>>\n%s' % (
 				self.rank, 
 				self.name, 
 				','.join(set(self.tag)),
-				','.join('%s:%s' % (p,self.property[p]) for p in self.property),
+				','.join('%s:%s' % (p,self.property[p]) for p in self.property if p!='ts'),
+				datetime.fromtimestamp(int(self.property['ts'])).strftime('%Y-%m-%d %H:%M:%S'),
 				'\n'.join(('%d. %s' % (i, desc[i])) for i in range(len(desc)))
 				)
 
@@ -27,6 +33,9 @@ class entry(object):
 # entry management
 class entmgr(object):
 	def __init__(self, dbname):
+		if not os.path.exists(cm.cellhome):
+			print 'cell db not exist. run "rc init" first.'
+			exit(-1)
 		self.db = TinyDB(dbname) 
 		self.globalseq = cm.getmaxseq(self.db)
 
@@ -37,6 +46,7 @@ class entmgr(object):
 		e.content = arglist[3]
 		self.globalseq+=1
 		e.rank = self.globalseq 
+		e.property['ts'] = int(time.time())
 
 		# for optional properties
 		if len(arglist) > 4:
