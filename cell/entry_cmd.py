@@ -1,8 +1,8 @@
 import sys
-import cell.core.common as cm
+import cell.common as cm
 
 from tinydb import TinyDB, Query
-from cell.core.entry import entry, entmgr
+from cell.entry import entry, entmgr
 
 
 def altercontent(arglist):

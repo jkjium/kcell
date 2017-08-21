@@ -20,7 +20,7 @@ class entry(object):
 		desc = self.content.split('\n')
 		if 'ts' not in self.property:
 			self.property['ts'] = '1497470916' #'2017-06-14 15:10:23'
-		return '[%d] (%s) tag:[%s] {%s} %s\n>>\n%s' % (
+		return '[%d] [%s] tag:[%s] {%s} %s\n>>\n%s' % (
 				self.rank, 
 				self.name, 
 				','.join(set(self.tag)),
@@ -33,7 +33,7 @@ class entry(object):
 # entry management
 class entmgr(object):
 	def __init__(self, dbname):
-		if not os.path.exists(cm.cellhome):
+		if not os.path.exists(cm.entrydb):
 			print 'cell db not exist. run "rc init" first.'
 			exit(-1)
 		self.dbname = dbname

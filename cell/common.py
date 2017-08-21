@@ -3,16 +3,16 @@ import os
 from collections import defaultdict
 from shutil import copyfile
 
-from cell.core.entry import entry
+from cell.entry import entry
 from tinydb import TinyDB, Query
 
 '''
 wrapper module
 '''
-cellroot = os.path.expanduser('~') + '/.cellroot'
-cellhome = '.cell'
-entrydb = cellhome+'/entrydb'
-draftdb = cellhome+'/draftdb'
+entrydb = '.entrydb'
+#cellhome = '.cell'
+#entrydb = cellhome+'/entrydb'
+#draftdb = cellhome+'/draftdb'
 
 globalseq = -1
 assign = ':'
@@ -20,6 +20,14 @@ ext = '+'
 
 ops = ['=','%'] # substring and regex
 aps = [assign, ext] # assign and extend (for tag, content)
+'''
+def entrydb():
+	with open(cellmeta, 'r') as fp:
+		metaline = fp.read()
+	print 'open %s/%s' % (cellroot, metaline.strip())
+	return '%s/%s' % (cellroot, metaline.strip())
+'''
+
 
 def backup(dbpathfile):
 	copyfile(dbpathfile, dbpathfile+'.shadow')
