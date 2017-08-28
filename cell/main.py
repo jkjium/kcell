@@ -10,7 +10,7 @@ import cell.common as cm
 from cell import entry_cmd
 from cell.entry import entmgr
 
-import tests.test as tt
+#import tests.test as tt
 
 # init a cell directory
 def init(arglist):
@@ -44,7 +44,7 @@ def init(arglist):
 	'''
 
 def rollback():
-	copyfile(cm.entrydb()+'.shadow', cm.entrydb())
+	copyfile(cm.entrydb+'.shadow', cm.entrydb)
 
 def help(d):
 	print '--------------------'

@@ -9,7 +9,7 @@ from tinydb import TinyDB, Query
 '''
 wrapper module
 '''
-entrydb = '.entrydb'
+entrydb = 'entrydb'
 #cellhome = '.cell'
 #entrydb = cellhome+'/entrydb'
 #draftdb = cellhome+'/draftdb'
